@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Media</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="container mx-auto p-6">
+      <h1 class="text-3xl font-bold mb-4">Upload Media</h1>
+      <form
+        action="/upload"
+        method="post"
+        enctype="multipart/form-data"
+        class="bg-white p-6 rounded-lg shadow"
+      >
+        <input
+          type="file"
+          name="media"
+          class="block w-full mb-4 border border-gray-300 rounded-lg"
+        />
+        <button
+          type="submit"
+          class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+        >
+          Upload
+        </button>
+      </form>
+      {% if result %}
+      <p class="mt-4 text-green-600">{{ result }}</p>
+      {% endif %}
+      <a href="/" class="text-blue-500 hover:underline">Back to Home</a>
+    </div>
+  </body>
+</html>

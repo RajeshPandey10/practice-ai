@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trends</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <div class="container mx-auto p-6">
+      <h1 class="text-3xl font-bold mb-4">Real-Time Trends</h1>
+      <ul class="list-disc pl-6">
+        {% for trend in trends %}
+        <li class="mb-2">{{ trend }}</li>
+        {% endfor %}
+      </ul>
+      <a href="/" class="text-blue-500 hover:underline">Back to Home</a>
+    </div>
+  </body>
+</html>
