@@ -20,11 +20,26 @@ class CharLSTM(nn.Module):
 
 class ContentModel:
     def __init__(self, vocab_size, embedding_dim, hidden_dim, num_layers, lr):
-        self.model = CharLSTM(vocab_size, embedding_dim, hidden_dim, num_layers)
-        self.criterion = nn.CrossEntropyLoss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=lr)
+        self.model = None  # Lazy load CharLSTM
+        self.generator = None  # Lazy load Hugging Face pipeline
+        self.vocab_size = vocab_size
+        self.embedding_dim = embedding_dim
+        self.hidden_dim = hidden_dim
+        self.num_layers = num_layers
+        self.lr = lr
+
+    def load_char_lstm(self):
+        if self.model is None:
+            self.model = CharLSTM(self.vocab_size, self.embedding_dim, self.hidden_dim, self.num_layers)
+            self.criterion = nn.CrossEntropyLoss()
+            self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
+
+    def load_generator(self):
+        if self.generator is None:
+            self.generator = pipeline("text-generation", model="distilgpt2")  # Use a smaller model
 
     def train(self, X, Y, epochs):
+        self.load_char_lstm()
         for epoch in range(epochs):
             output, _ = self.model(X)
             loss = self.criterion(output, Y)
@@ -35,6 +50,7 @@ class ContentModel:
                 print(f"Epoch {epoch}, Loss: {loss.item():.4f}")
 
     def generate_text(self, seed, char2idx, idx2char, length=100, temperature=1.0):
+        self.load_char_lstm()
         self.model.eval()
         result = seed
         input_seq = torch.tensor([[char2idx[c] for c in seed]])
@@ -70,8 +86,8 @@ class ContentModel:
 
     def generate_captions(self, prompt):
         """Generate captions and hashtags using an LLM."""
-        generator = pipeline("text-generation", model="gpt2")  # Using a public model for testing
-        result = generator(prompt, max_length=50, num_return_sequences=1)
+        self.load_generator()
+        result = self.generator(prompt, max_length=50, num_return_sequences=1)
         return result[0]['generated_text']
 
     def process_media(self, media_path):
