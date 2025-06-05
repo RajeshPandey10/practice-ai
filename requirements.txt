@@ -61,3 +61,4 @@ websockets==15.0.1
 wheel==0.44.0
 wordcloud==1.9.4
 xgboost==2.1.4
+flask
